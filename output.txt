@@ -1,0 +1,589 @@
+===================================================================
+Recommended Usage: ./simplecompile.sh > output.txt 2>&1
+===================================================================
+Tue Jan 28 03:14:48 PST 2020
+Linux csslab8.uwb.edu 3.10.0-957.27.2.el7.x86_64 #1 SMP Mon Jul 29 17:46:05 UTC 2019 x86_64 x86_64 x86_64 GNU/Linux
+uid=1016866(estefano) gid=2121016866(estefano) groups=2121016866(estefano),605559(lab-access) context=unconfined_u:unconfined_r:unconfined_t:s0-s0:c0.c1023
+===================================================================
+*** compiling with clang++ to create an executable called myprogram
+===================================================================
+clang version 7.0.1 (tags/RELEASE_701/final)
+Target: x86_64-unknown-linux-gnu
+Thread model: posix
+InstalledDir: /opt/rh/llvm-toolset-7.0/root/usr/bin
+===================================================================
+*** running myprogram
+Starting testPisan01
+* Testing == and !=
+Ending testPisan01
+Starting testPisan02
+* Testing == and != with more detail
+Ending testPisan02
+Starting testPisan03
+* Testing traversal
+Visual check B1:
+                x
+            g
+        f
+    c
+        a
+
+            ___________c____________            
+      _____a______            _____f______      
+   __N___      __N___      __N___      __g___   
+  N     N     N     N     N     N     N     x   
+
+Ending testPisan03
+Starting testSample01
+Ending testSample01
+----------TEST 1-----------
+----------TEST 2-----------
+Original Tree
+        70
+    60
+                50
+            40
+                30
+        20
+            10
+
+            ___________60___________            
+      _____20_____            _____70_____      
+   __10__      __40__      __N___      __N___   
+  N     N     30    50    N     N     N     N   
+
+Tree after removing elements: 50, 30
+        70
+    60
+            40
+        20
+            10
+
+      _____60_____      
+   __20__      __70__   
+  10    40    N     N   
+
+Tree after removing elements: 6
+        70
+    60
+            40
+        20
+            6
+
+      _____60_____      
+   __20__      __70__   
+  6     40    N     N   
+
+Tree after removing elements: 60
+    70
+            40
+        20
+            6
+
+      _____70_____      
+   __20__      __N___   
+  6     40    N     N   
+
+Rebalanced Tree
+            70
+        40
+    20
+        6
+
+      _____20_____      
+   __6___      __40__   
+  N     N     N     70  
+
+----------TEST 3-----------
+                131
+            120
+        82
+            73
+    63
+            54
+        32
+            11
+
+            ___________63___________            
+      _____32_____            _____82_____      
+   __11__      __54__      __73__      _120__   
+  N     N     N     N     N     N     N    131  
+
+Done!
+===================================================================
+*** running clang-tidy using options from .clang-tidy
+LLVM (http://llvm.org/):
+  LLVM version 7.0.1
+  Optimized build.
+  Default target: x86_64-unknown-linux-gnu
+  Host CPU: broadwell
+19259 warnings generated.
+29658 warnings generated.
+/home/NETID/estefano/CSS343/uwb2020wi343b-bst-estefanofc/bst.hpp:116:20: warning: narrowing conversion from 'typename __gnu_cxx::__promote_2<int, int>::__type' (aka 'double') to 'int' [bugprone-narrowing-conversions]
+        int MaxN = pow(2, Depth - 1);
+                   ^
+/home/NETID/estefano/CSS343/uwb2020wi343b-bst-estefanofc/bst.hpp:186:37: warning: non-const reference parameter 'Index', make it const or use a pointer [google-runtime-references]
+    void rebalanceAdd(Node *N, int &Index, T *Arr) {
+                                    ^
+/home/NETID/estefano/CSS343/uwb2020wi343b-bst-estefanofc/bst.hpp:236:57: warning: non-const reference parameter 'Success', make it const or use a pointer [google-runtime-references]
+    Node *removeHelper(Node *Curr, const T &Item, bool &Success) {
+                                                        ^
+Suppressed 29658 warnings (29654 in non-user code, 4 NOLINT).
+Use -header-filter=.* to display errors from all non-system headers. Use -system-headers to display errors from system headers as well.
+===================================================================
+*** running clang-format format formatting suggestions
+*** generating new .clang-format based on LLVM style
+*** formatting suggestions for ./bsttest.cpp
+25d24
+< 
+35,58c34,49
+<     // never create an instance of TreeVisitor object
+<     // we'll just use the static functions
+<     TreeVisitor() = delete;
+< 
+<     // insert output to SS rather than cout, so we can test it
+<     static stringstream SS;
+< 
+<     static string getSS() {
+<         return SS.str();
+<     }
+< 
+<     static void resetSS() {
+<         SS.str(string());
+<     }
+< 
+<     // instead of cout, insert item into a string stream
+<     static void visitor(const string &Item) {
+<         SS << Item;
+<     }
+< 
+<     // instead of cout, insert item into a string stream
+<     static void visitor(const int &Item) {
+<         SS << Item;
+<     }
+---
+>   // never create an instance of TreeVisitor object
+>   // we'll just use the static functions
+>   TreeVisitor() = delete;
+> 
+>   // insert output to SS rather than cout, so we can test it
+>   static stringstream SS;
+> 
+>   static string getSS() { return SS.str(); }
+> 
+>   static void resetSS() { SS.str(string()); }
+> 
+>   // instead of cout, insert item into a string stream
+>   static void visitor(const string &Item) { SS << Item; }
+> 
+>   // instead of cout, insert item into a string stream
+>   static void visitor(const int &Item) { SS << Item; }
+74,87c65,78
+<     cout << "Starting testPisan01" << endl;
+<     cout << "* Testing == and !=" << endl;
+<     BST<string> B1;
+<     BST<string> B2;
+<     BST<string> B3;
+<     // == and != for empty trees
+<     assert(B1 == B2 && (!(B1 != B2)));
+<     B1.add("c");
+<     B2.add("c");
+<     B3.add("b");
+<     // == and !- for 1-Node trees B1, B2, B3
+<     assert(B1 == B2 && (!(B1 != B2)));
+<     assert(B1 != B3 && (!(B1 == B3)));
+<     cout << "Ending testPisan01" << endl;
+---
+>   cout << "Starting testPisan01" << endl;
+>   cout << "* Testing == and !=" << endl;
+>   BST<string> B1;
+>   BST<string> B2;
+>   BST<string> B3;
+>   // == and != for empty trees
+>   assert(B1 == B2 && (!(B1 != B2)));
+>   B1.add("c");
+>   B2.add("c");
+>   B3.add("b");
+>   // == and !- for 1-Node trees B1, B2, B3
+>   assert(B1 == B2 && (!(B1 != B2)));
+>   assert(B1 != B3 && (!(B1 == B3)));
+>   cout << "Ending testPisan01" << endl;
+92,118c83,109
+<     cout << "Starting testPisan02" << endl;
+<     cout << "* Testing == and != with more detail" << endl;
+<     BST<string> B1;
+<     BST<string> B2;
+<     BST<string> B3;
+<     for (auto &S : vector<string>{"c", "a", "f", "g", "x"})
+<         B1.add(S);
+< 
+<     for (auto &S : vector<string>{"c", "f", "a", "g", "x"})
+<         B2.add(S);
+< 
+<     B3.add("b");
+< 
+<     // == for 5-Node trees B1, B2
+<     assert(B1 == B2 && (!(B1 != B2)));
+< 
+<     BST<string> B4(B3);
+<     // copy constructor for 1-Node trees B3, B4
+<     assert(B3 == B4 && (!(B3 != B4)));
+< 
+<     BST<string> B5(B1);
+<     // copy constructor for 5-Node trees B1, B5
+<     assert(B1 == B5 && (!(B5 != B1)));
+< 
+<     BST<string> B7("b");
+<     // 1-param constructor for 1-Node trees B3, B7
+<     assert(B3 == B7 && (!(B3 != B7)));
+---
+>   cout << "Starting testPisan02" << endl;
+>   cout << "* Testing == and != with more detail" << endl;
+>   BST<string> B1;
+>   BST<string> B2;
+>   BST<string> B3;
+>   for (auto &S : vector<string>{"c", "a", "f", "g", "x"})
+>     B1.add(S);
+> 
+>   for (auto &S : vector<string>{"c", "f", "a", "g", "x"})
+>     B2.add(S);
+> 
+>   B3.add("b");
+> 
+>   // == for 5-Node trees B1, B2
+>   assert(B1 == B2 && (!(B1 != B2)));
+> 
+>   BST<string> B4(B3);
+>   // copy constructor for 1-Node trees B3, B4
+>   assert(B3 == B4 && (!(B3 != B4)));
+> 
+>   BST<string> B5(B1);
+>   // copy constructor for 5-Node trees B1, B5
+>   assert(B1 == B5 && (!(B5 != B1)));
+> 
+>   BST<string> B7("b");
+>   // 1-param constructor for 1-Node trees B3, B7
+>   assert(B3 == B7 && (!(B3 != B7)));
+120c111
+<     cout << "Ending testPisan02" << endl;
+---
+>   cout << "Ending testPisan02" << endl;
+125,155c116,146
+<     cout << "Starting testPisan03" << endl;
+<     cout << "* Testing traversal" << endl;
+<     BST<string> B1;
+<     BST<string> B2;
+<     BST<string> B3;
+<     for (auto &S : vector<string>{"c", "a", "f", "g", "x"})
+<         B1.add(S);
+< 
+<     for (auto &S : vector<string>{"c", "f", "a", "g", "x"})
+<         B2.add(S);
+< 
+<     B3.add("b");
+< 
+<     TreeVisitor::resetSS();
+<     B1.inOrderTraverse(TreeVisitor::visitor);
+<     string Result = "acfgx";
+<     assert(TreeVisitor::getSS() == Result);
+< 
+<     TreeVisitor::resetSS();
+<     B1.preOrderTraverse(TreeVisitor::visitor);
+<     Result = "cafgx";
+<     assert(TreeVisitor::getSS() == Result);
+< 
+<     TreeVisitor::resetSS();
+<     B1.postOrderTraverse(TreeVisitor::visitor);
+<     Result = "axgfc";
+<     assert(TreeVisitor::getSS() == Result);
+< 
+<     cout << "Visual check B1:" << endl;
+<     cout << B1 << endl;
+<     cout << "Ending testPisan03" << endl;
+---
+>   cout << "Starting testPisan03" << endl;
+>   cout << "* Testing traversal" << endl;
+>   BST<string> B1;
+>   BST<string> B2;
+>   BST<string> B3;
+>   for (auto &S : vector<string>{"c", "a", "f", "g", "x"})
+>     B1.add(S);
+> 
+>   for (auto &S : vector<string>{"c", "f", "a", "g", "x"})
+>     B2.add(S);
+> 
+>   B3.add("b");
+> 
+>   TreeVisitor::resetSS();
+>   B1.inOrderTraverse(TreeVisitor::visitor);
+>   string Result = "acfgx";
+>   assert(TreeVisitor::getSS() == Result);
+> 
+>   TreeVisitor::resetSS();
+>   B1.preOrderTraverse(TreeVisitor::visitor);
+>   Result = "cafgx";
+>   assert(TreeVisitor::getSS() == Result);
+> 
+>   TreeVisitor::resetSS();
+>   B1.postOrderTraverse(TreeVisitor::visitor);
+>   Result = "axgfc";
+>   assert(TreeVisitor::getSS() == Result);
+> 
+>   cout << "Visual check B1:" << endl;
+>   cout << B1 << endl;
+>   cout << "Ending testPisan03" << endl;
+158c149
+< //testing height method
+---
+> // testing height method
+160,165c151,156
+<     cout << "----------TEST 1-----------" << endl;
+<     BST<int> B1(1);
+<     for (int I = 2; I < 6; ++I) {
+<         B1.add(I);
+<     }
+<     assert(B1.getHeight() == 5);
+---
+>   cout << "----------TEST 1-----------" << endl;
+>   BST<int> B1(1);
+>   for (int I = 2; I < 6; ++I) {
+>     B1.add(I);
+>   }
+>   assert(B1.getHeight() == 5);
+168c159
+< //testing remove and rebalance methods
+---
+> // testing remove and rebalance methods
+170,203c161,194
+<     cout << "----------TEST 2-----------" << endl;
+<     BST<int> B1(60);
+<     B1.add(70);
+<     B1.add(20);
+<     B1.add(10);
+<     B1.add(40);
+<     B1.add(30);
+<     B1.add(50);
+<     cout << "Original Tree" << endl;
+<     cout << B1 << endl;
+<     assert(B1.getHeight() == 4);
+<     //removing leaf nodes
+<     B1.remove(50);
+<     B1.remove(30);
+<     cout << "Tree after removing elements: 50, 30" << endl;
+<     cout << B1 << endl;
+<     B1.add(6);
+<     //removing node with one child
+<     B1.remove(10);
+<     cout << "Tree after removing elements: 6" << endl;
+<     cout << B1 << endl;
+<     //removing node with two children
+<     B1.remove(60);
+<     cout << "Tree after removing elements: 60" << endl;
+<     cout << B1 << endl;
+<     assert(B1.getHeight() == 3);
+<     assert(B1.numberOfNodes() == 4);
+<     //removing non existent element
+<     assert(!B1.remove(100));
+<     //rebalancing node
+<     B1.rebalance();
+<     cout << "Rebalanced Tree" << endl;
+<     cout << B1 << endl;
+<     assert(B1.getHeight() == 3);
+---
+>   cout << "----------TEST 2-----------" << endl;
+>   BST<int> B1(60);
+>   B1.add(70);
+>   B1.add(20);
+>   B1.add(10);
+>   B1.add(40);
+>   B1.add(30);
+>   B1.add(50);
+>   cout << "Original Tree" << endl;
+>   cout << B1 << endl;
+>   assert(B1.getHeight() == 4);
+>   // removing leaf nodes
+>   B1.remove(50);
+>   B1.remove(30);
+>   cout << "Tree after removing elements: 50, 30" << endl;
+>   cout << B1 << endl;
+>   B1.add(6);
+>   // removing node with one child
+>   B1.remove(10);
+>   cout << "Tree after removing elements: 6" << endl;
+>   cout << B1 << endl;
+>   // removing node with two children
+>   B1.remove(60);
+>   cout << "Tree after removing elements: 60" << endl;
+>   cout << B1 << endl;
+>   assert(B1.getHeight() == 3);
+>   assert(B1.numberOfNodes() == 4);
+>   // removing non existent element
+>   assert(!B1.remove(100));
+>   // rebalancing node
+>   B1.rebalance();
+>   cout << "Rebalanced Tree" << endl;
+>   cout << B1 << endl;
+>   assert(B1.getHeight() == 3);
+206c197
+< //testing constructor from array
+---
+> // testing constructor from array
+208,215c199,206
+<     cout << "----------TEST 3-----------" << endl;
+<     int Arr[8]{11, 32, 54, 63, 73, 82, 120, 131};
+<     BST<int> B1(Arr, 8);
+<     cout << B1 << endl;
+<     assert(B1.contains(11));
+<     assert(!B1.contains(2));
+<     BST<double> B2;
+<     assert(B2.isEmpty());
+---
+>   cout << "----------TEST 3-----------" << endl;
+>   int Arr[8]{11, 32, 54, 63, 73, 82, 120, 131};
+>   BST<int> B1(Arr, 8);
+>   cout << B1 << endl;
+>   assert(B1.contains(11));
+>   assert(!B1.contains(2));
+>   BST<double> B2;
+>   assert(B2.isEmpty());
+224,226c215,217
+<     cout << "Starting testSample01" << endl;
+<     // assert(true);
+<     cout << "Ending testSample01" << endl;
+---
+>   cout << "Starting testSample01" << endl;
+>   // assert(true);
+>   cout << "Ending testSample01" << endl;
+231,238c222,229
+<     testPisan01();
+<     testPisan02();
+<     testPisan03();
+<     testSample01();
+<     //
+<     addedTest1();
+<     addedTest2();
+<     addedTest3();
+---
+>   testPisan01();
+>   testPisan02();
+>   testPisan03();
+>   testSample01();
+>   //
+>   addedTest1();
+>   addedTest2();
+>   addedTest3();
+*** formatting suggestions for ./main.cpp
+19d18
+< 
+===================================================================
+*** running valgrind to detect memory leaks
+==22363==     in use at exit: 0 bytes in 0 blocks
+===================================================================
+*** compiling with clang++ to checking for memory leaks
+===================================================================
+*** running myprogram with memory checking
+Starting testPisan01
+* Testing == and !=
+Ending testPisan01
+Starting testPisan02
+* Testing == and != with more detail
+Ending testPisan02
+Starting testPisan03
+* Testing traversal
+Visual check B1:
+                x
+            g
+        f
+    c
+        a
+
+            ___________c____________            
+      _____a______            _____f______      
+   __N___      __N___      __N___      __g___   
+  N     N     N     N     N     N     N     x   
+
+Ending testPisan03
+Starting testSample01
+Ending testSample01
+----------TEST 1-----------
+----------TEST 2-----------
+Original Tree
+        70
+    60
+                50
+            40
+                30
+        20
+            10
+
+            ___________60___________            
+      _____20_____            _____70_____      
+   __10__      __40__      __N___      __N___   
+  N     N     30    50    N     N     N     N   
+
+Tree after removing elements: 50, 30
+        70
+    60
+            40
+        20
+            10
+
+      _____60_____      
+   __20__      __70__   
+  10    40    N     N   
+
+Tree after removing elements: 6
+        70
+    60
+            40
+        20
+            6
+
+      _____60_____      
+   __20__      __70__   
+  6     40    N     N   
+
+Tree after removing elements: 60
+    70
+            40
+        20
+            6
+
+      _____70_____      
+   __20__      __N___   
+  6     40    N     N   
+
+Rebalanced Tree
+            70
+        40
+    20
+        6
+
+      _____20_____      
+   __6___      __40__   
+  N     N     N     70  
+
+----------TEST 3-----------
+                131
+            120
+        82
+            73
+    63
+            54
+        32
+            11
+
+            ___________63___________            
+      _____32_____            _____82_____      
+   __11__      __54__      __73__      _120__   
+  N     N     N     N     N     N     N    131  
+
+Done!
+===================================================================
+*** using --analyze option for clang++ to detect issues
+===================================================================
+*** cleaning up, deleting myprogram
+===================================================================
+Tue Jan 28 03:15:27 PST 2020
+===================================================================
+Exiting with 0
